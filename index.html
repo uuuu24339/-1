@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- 文字コードをUTF-8（日本語対応）に設定 -->
+  <meta charset="UTF-8">
+  <!-- スマホなどの画面サイズに合わせて表示倍率を自動調整（レスポンシブ対応） -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ブラウザのタブに表示されるタイトル -->
+  <title>ボンバー対戦</title>
+  <!-- 外部CSSファイル（index.css）の読み込み -->
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- ゲーム全体を包むメインコンテナ（カードや中央エリアの配置用） -->
+  <div class="game-container">
+    
+    <!-- 画面左：プレイヤー1のカード（名前・バッジ・ライフを表示） -->
+    <div id="p1-card" class="player-card">
+      <h2>プレイヤー 1</h2>
+      <!-- 1Pを示す丸バッジ -->
+      <div class="status-badge">1P</div>
+      <!-- ライフのハートアイコンを表示するエリア -->
+      <div class="life-container">ライフ: <span id="p1-life">♥♥♥</span></div>
+    </div>
+
+    <!-- 画面中央：状態案内テキスト・ボタン・4x4盤面 -->
+    <div class="center-area">
+      <!-- ターン進行や勝敗案内を表示するメッセージボックス -->
+      <div id="status-message">「スタート」を押して開始</div>
+      
+      <!-- 盤面の上にスタートボタンを配置 -->
+      <div class="top-button-area">
+        <button id="start-btn">ゲームスタート</button>
+      </div>
+
+      <!-- JavaScriptで16個のマス目が動的に挿入される盤面コンテナ -->
+      <div id="board"></div>
+
+      <!-- 盤面の下にボタン群（リセット／ルール説明）を配置 -->
+      <div class="button-group">
+        <!-- スタート後表示用リセットボタン（左配置） -->
+        <button id="reset-btn" class="hidden">リセット</button>
+        <!-- 初期から盤面下に表示するルール説明ボタン（右配置） -->
+        <button id="rule-btn" class="action-btn">ルール説明</button>
+      </div>
+    </div>
+
+    <!-- 画面右：プレイヤー2のカード（名前・バッジ・ライフを表示） -->
+    <div id="p2-card" class="player-card">
+      <h2>プレイヤー 2</h2>
+      <!-- 2Pを示す丸バッジ -->
+      <div class="status-badge">2P</div>
+      <!-- ライフのハートアイコンを表示するエリア -->
+      <div class="life-container">ライフ: <span id="p2-life">♥♥♥</span></div>
+    </div>
+
+  </div>
+
+  <!-- ルール説明用モーダルポップアップ（複数ページ対応） -->
+  <div id="rule-modal" class="modal hidden">
+    <div class="modal-content">
+      <span id="close-modal" class="close-btn">&times;</span>
+      
+      <!-- ページ1: ゲームの概要 -->
+      <div class="rule-page" data-page="1">
+        <h2>1. ゲームの概要</h2>
+        <ul>
+          <li>4x4の16マスを使った2人対戦マインスイーパーです。</li>
+          <li>各プレイヤーは初期３つのライフ（♥♥♥）を持っています。</li>
+          <li>最後までライフが残っていたプレイヤーの勝利です。</li>
+        </ul>
+      </div>
+
+      <!-- ページ2: 爆弾設置フェーズ -->
+      <div class="rule-page hidden" data-page="2">
+        <h2>2. 爆弾設置フェーズ</h2>
+        <ul>
+          <li>ゲーム開始後、プレイヤー1から順に爆弾を3つ隠します。</li>
+          <li>両プレイヤーが同じマスに爆弾を設置した場合は、そのマスは爆弾が２つになります。</li>
+        </ul>
+      </div>
+
+      <!-- ページ3: めくりフェーズ -->
+      <div class="rule-page hidden" data-page="3">
+        <h2>3. めくりフェーズ</h2>
+        <ul>
+          <li>交互に好きなマスを2つめくります。</li>
+          <li>爆弾マスを開けてしまうと爆弾が爆発し、ライフが減ります。</li>
+          <li>爆弾1つにつきライフは１減ります。</li>
+          <li>爆弾マス以外を開けると「周囲のマスにある爆弾の数」が表示されます。</li>
+        </ul>
+      </div>
+      
+       <!-- ページ4: 注意事項 -->
+      <div class="rule-page hidden" data-page="4">
+        <h2>４. 注意事項</h2>
+        <ul>
+          <li>爆弾設置フェーズの時は、盤面を見ないようにしてね</li>
+          <li>マスをめくったときに表示される数字は、周囲の”爆弾の数”だよ</li>
+
+        </ul>
+      </div>
+
+      <!-- ページページ制御フッター -->
+      <div class="modal-footer">
+        <button id="prev-page-btn" class="page-btn" disabled>前へ</button>
+        <span id="page-indicator">1 / 3</span>
+        <button id="next-page-btn" class="page-btn">次へ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 外部JavaScriptファイル（index.js）の読み込み -->
+  <script src="index.js"></script>
+</body>
+</html>
